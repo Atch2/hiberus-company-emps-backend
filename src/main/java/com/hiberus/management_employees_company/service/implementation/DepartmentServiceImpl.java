@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,8 +32,12 @@ public class DepartmentServiceImpl implements DepartmentService {
         department.setName(departmentDTO.getName());
         department.setStatus(departmentDTO.getStatus());
 
-        departmentRepository.save(department);
-        return Map.of("message", "Created department successfully", "code", "200");
+        Department saved = departmentRepository.save(department);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", saved.getId());
+        response.put("message", "Departamento creado con éxito");
+        response.put("department", convertToDTO(saved));
+        return response;
     }
 
     @Override
@@ -40,8 +45,12 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new NoSuchElementException("Department not found with id: " + departmentId));
         department.setStatus("I");
-        departmentRepository.save(department);
-        return Map.of("message", "Department deleted successfully", "code", "200");
+        Department updated = departmentRepository.save(department);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", updated.getId());
+        response.put("message", "Departamento eliminado con éxito");
+        response.put("department", convertToDTO(updated));
+        return response;
     }
 
     @Override

@@ -25,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final DepartmentRepository departmentRepository;
 
     @Override
-    public Map<String, Object> createEmployee(CreateEmployeeDTO dto, UUID departmentId) {
+    public String createEmployee(CreateEmployeeDTO dto, UUID departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new NoSuchElementException("Department not found with id: " + departmentId));
 
@@ -40,40 +40,43 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(dto.getStatus());
         employee.setDepartment(department);
 
-        Employee saved = employeeRepository.save(employee);
-        dto.setId(saved.getId());
-        return Map.of("message", "Departamento creado con éxito", "code", "200");
+        employeeRepository.save(employee);
+        return "Empleado creado con éxito";
     }
 
     @Override
-    public Map<String, Object> deleteEmployee(UUID employeeId) {
+    public String deleteEmployee(UUID employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new NoSuchElementException("Employee not found with id: " + employeeId));
         employee.setStatus("I");
         employeeRepository.save(employee);
-        return Map.of("message", "Employee deleted successfully", "code", "200");
+        return "Empleado eliminado lógicamente correctamente";
     }
 
     @Override
     public Map<String, Object> getEmployeeWithHighestSalary() {
         Optional<Employee> opt = employeeRepository.findAll().stream()
                 .max(Comparator.comparing(Employee::getSalary));
+        Map<String, Object> response = new HashMap<>();
         if (opt.isPresent()) {
             Employee e = opt.get();
-            return Map.of("name", e.getFirstName() + " " + e.getLastName(), "salary", e.getSalary());
+            response.put("employee", convertToDTO(e));
+            response.put("salary", e.getSalary());
         }
-        return Collections.emptyMap();
+        return response;
     }
 
     @Override
     public Map<String, Object> getEmployeeWithLowestAge() {
         Optional<Employee> opt = employeeRepository.findAll().stream()
                 .min(Comparator.comparing(Employee::getAge));
+        Map<String, Object> response = new HashMap<>();
         if (opt.isPresent()) {
             Employee e = opt.get();
-            return Map.of("name", e.getFirstName() + " " + e.getLastName(), "age", e.getAge());
+            response.put("employee", convertToDTO(e));
+            response.put("age", e.getAge());
         }
-        return Collections.emptyMap();
+        return response;
     }
 
     @Override

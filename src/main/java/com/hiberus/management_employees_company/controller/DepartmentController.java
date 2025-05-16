@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.UUID;
 import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/department")
@@ -23,18 +24,27 @@ public class DepartmentController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> createDepartment(@Valid @RequestBody CreateDepartamentDTO dto) {
-        return departmentService.createDepartment(dto);
+    public ResponseEntity<Map<String, Object>> createDepartment(@Valid @RequestBody CreateDepartamentDTO dto) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", departmentService.createDepartment(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/delete/{departmentId}")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Object> deleteDepartment(@PathVariable UUID departmentId) {
-        return departmentService.deleteDepartment(departmentId);
+    public ResponseEntity<Map<String, Object>> deleteDepartment(@PathVariable UUID departmentId) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", departmentService.deleteDepartment(departmentId));
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/departments")
-    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
-        return ResponseEntity.ok(departmentService.getAllDepartments());
+    public ResponseEntity<Map<String, Object>> getAllDepartments() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", departmentService.getAllDepartments());
+        return ResponseEntity.ok(response);
     }
 }

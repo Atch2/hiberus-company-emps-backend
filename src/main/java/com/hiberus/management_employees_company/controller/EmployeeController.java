@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/employee")
@@ -22,33 +23,53 @@ public class EmployeeController {
 
     @PostMapping("/create/{departmentId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, Object> createEmployee(@Valid @RequestBody CreateEmployeeDTO dto, @PathVariable UUID departmentId) {
-        return employeeService.createEmployee(dto, departmentId);
+    public ResponseEntity<Map<String, Object>> createEmployee(@Valid @RequestBody CreateEmployeeDTO dto, @PathVariable UUID departmentId) {
+        String message = employeeService.createEmployee(dto, departmentId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/delete/{employeeId}")
     @ResponseStatus(HttpStatus.OK)
-    public Map<String, Object> deleteEmployee(@PathVariable UUID employeeId) {
-        return employeeService.deleteEmployee(employeeId);
+    public ResponseEntity<Map<String, Object>> deleteEmployee(@PathVariable UUID employeeId) {
+        String message = employeeService.deleteEmployee(employeeId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", message);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/highest-salary")
     public ResponseEntity<Map<String, Object>> getEmployeeWithHighestSalary() {
-        return ResponseEntity.ok(employeeService.getEmployeeWithHighestSalary());
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", employeeService.getEmployeeWithHighestSalary());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/lowest-age")
     public ResponseEntity<Map<String, Object>> getEmployeeWithLowestAge() {
-        return ResponseEntity.ok(employeeService.getEmployeeWithLowestAge());
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", employeeService.getEmployeeWithLowestAge());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/count-last-month")
-    public ResponseEntity<Long> countEmployeesEnteredLastMonth() {
-        return ResponseEntity.ok(employeeService.countEmployeesEnteredLastMonth());
+    public ResponseEntity<Map<String, Object>> countEmployeesEnteredLastMonth() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", employeeService.countEmployeesEnteredLastMonth());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
-        return ResponseEntity.ok(employeeService.getAllEmployees());
+    public ResponseEntity<Map<String, Object>> getAllEmployees() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("data", employeeService.getAllEmployees());
+        return ResponseEntity.ok(response);
     }
 }
