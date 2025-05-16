@@ -22,13 +22,13 @@ public class EmployeeController {
 
     @PostMapping("/create/{departmentId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createEmployee(@Valid @RequestBody CreateEmployeeDTO dto, @PathVariable UUID departmentId) {
+    public Map<String, Object> createEmployee(@Valid @RequestBody CreateEmployeeDTO dto, @PathVariable UUID departmentId) {
         return employeeService.createEmployee(dto, departmentId);
     }
 
     @DeleteMapping("/delete/{employeeId}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteEmployee(@PathVariable UUID employeeId) {
+    public Map<String, Object> deleteEmployee(@PathVariable UUID employeeId) {
         return employeeService.deleteEmployee(employeeId);
     }
 

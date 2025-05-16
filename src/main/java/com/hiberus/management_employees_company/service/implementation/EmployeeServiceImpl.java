@@ -25,7 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final DepartmentRepository departmentRepository;
 
     @Override
-    public String createEmployee(CreateEmployeeDTO dto, UUID departmentId) {
+    public Map<String, Object> createEmployee(CreateEmployeeDTO dto, UUID departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new NoSuchElementException("Department not found with id: " + departmentId));
 
@@ -42,16 +42,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee saved = employeeRepository.save(employee);
         dto.setId(saved.getId());
-        return "Created employee successfully";
+        return Map.of("message", "Departamento creado con éxito", "code", "200");
     }
 
     @Override
-    public String deleteEmployee(UUID employeeId) {
+    public Map<String, Object> deleteEmployee(UUID employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new NoSuchElementException("Employee not found with id: " + employeeId));
         employee.setStatus("I");
         employeeRepository.save(employee);
-        return "Employee deleted successfully";
+        return Map.of("message", "Employee deleted successfully", "code", "200");
     }
 
     @Override

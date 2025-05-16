@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/department")
@@ -22,13 +23,13 @@ public class DepartmentController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public String createDepartment(@Valid @RequestBody CreateDepartamentDTO dto) {
+    public Map<String, Object> createDepartment(@Valid @RequestBody CreateDepartamentDTO dto) {
         return departmentService.createDepartment(dto);
     }
 
     @DeleteMapping("/delete/{departmentId}")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteDepartment(@PathVariable UUID departmentId) {
+    public Map<String, Object> deleteDepartment(@PathVariable UUID departmentId) {
         return departmentService.deleteDepartment(departmentId);
     }
 
